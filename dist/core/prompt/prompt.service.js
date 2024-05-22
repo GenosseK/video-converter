@@ -7,14 +7,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { PromptService } from "./core/prompt/prompt.service.js";
-export class App {
-    run() {
+import inquirer from 'inquirer';
+export class PromptService {
+    input(message, type) {
         return __awaiter(this, void 0, void 0, function* () {
-            const res = yield (new PromptService().input('Число', 'number'));
-            console.log(res);
+            const { result } = yield inquirer.prompt([
+                {
+                    type,
+                    name: 'result',
+                    message
+                }
+            ]);
+            return result;
         });
     }
 }
-const app = new App();
-app.run();
