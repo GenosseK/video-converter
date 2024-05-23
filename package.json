@@ -1,18 +1,18 @@
 {
-  "type": "module",
-  "name": "video-converter",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Alexey Kazhanov",
-  "license": "ISC",
-  "dependencies": {
-    "inquirer": "^9.2.22"
-  },
-  "devDependencies": {
-    "@types/inquirer": "^9.0.7"
-  }
+	"name": "video-converter",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Alexey Kazhanov",
+	"license": "ISC",
+	"dependencies": {
+		"inquirer": "^8.2.0"
+	},
+	"devDependencies": {
+		"@types/inquirer": "^8.2.0",
+		"@types/node": "^20.0.12"
+	}
 }

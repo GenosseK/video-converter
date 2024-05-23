@@ -8,24 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PromptService = void 0;
-const inquirer_1 = __importDefault(require("inquirer"));
-class PromptService {
-    input(message, type) {
+exports.CommandExecutor = void 0;
+class CommandExecutor {
+    constructor(logger) {
+        this.logger = logger;
+    }
+    execute() {
         return __awaiter(this, void 0, void 0, function* () {
-            const { result } = yield inquirer_1.default.prompt([
-                {
-                    type,
-                    name: 'result',
-                    message
-                }
-            ]);
-            return result;
+            const input = yield this.prompt();
+            const command = this.build(input);
+            const stream = this.spawn(command);
+            this.processStream(stream, this.logger);
         });
     }
 }
-exports.PromptService = PromptService;
+exports.CommandExecutor = CommandExecutor;
