@@ -55,7 +55,7 @@ class FfmpegExecutor extends command_executor_js_1.CommandExecutor {
     }
     build(input) {
         const { width, height, path, name, format } = input;
-        const output = this.fileService.getFilePath(path, name, format || (0, path_1.extname)(path).slice(1)); // Keep the format or use the input file extension
+        const output = this.fileService.getFilePath(path, name, format || (0, path_1.extname)(path).slice(1));
         const args = (new ffmpeg_builder_js_1.FfmpegBuilder(format))
             .input(path)
             .setVideoSize(width, height)

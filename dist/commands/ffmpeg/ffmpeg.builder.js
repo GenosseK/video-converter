@@ -36,7 +36,6 @@ class FfmpegBuilder {
             }
         }
         else if (this.inputPath) {
-            // Determine output format based on input file extension
             const ext = (0, path_1.extname)(this.inputPath).toLowerCase();
             switch (ext) {
                 case '.mp4':
@@ -64,7 +63,7 @@ class FfmpegBuilder {
         });
         const outputFormat = this.getOutputFormat();
         args.push('-f', outputFormat);
-        args.push(outputPath); // Keep the file extension for the output path
+        args.push(outputPath);
         return args;
     }
 }
