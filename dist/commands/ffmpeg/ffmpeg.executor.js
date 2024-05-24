@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FfmpegExecutor = void 0;
 const child_process_1 = require("child_process");
+const path_1 = require("path");
 const command_executor_js_1 = require("../../core/executor/command.executor.js");
 const files_service_js_1 = require("../../core/files/files.service.js");
 const stream_handler_js_1 = require("../../core/handlers/stream.handler.js");
@@ -28,7 +29,8 @@ class FfmpegExecutor extends command_executor_js_1.CommandExecutor {
             const height = yield this.promptService.input('Height', 'number');
             const path = yield this.promptService.input('Path to file', 'input');
             const name = yield this.promptService.input('Name', 'input');
-            return { width, height, path, name };
+            const format = yield this.promptService.input('Video format (mp4/mkv/avi)', 'input');
+            return { width, height, path, name, format };
         });
     }
     promptMultiple() {
@@ -44,24 +46,27 @@ class FfmpegExecutor extends command_executor_js_1.CommandExecutor {
                     const height = yield this.promptService.input(`Height for file ${i + 1}`, 'number');
                     const path = yield this.promptService.input(`Path to file ${i + 1}`, 'input');
                     const name = yield this.promptService.input(`Output name for file ${i + 1}`, 'input');
-                    inputs.push({ width, height, path, name });
+                    const format = yield this.promptService.input(`Video format (mp4/mkv/avi) for file ${i + 1}`, 'input');
+                    inputs.push({ width, height, path, name, format });
                 }
                 return inputs;
             }
         });
     }
     build(input) {
-        const { width, height, path, name } = input;
-        const output = this.fileService.getFilePath(path, name, 'mp4');
-        const args = (new ffmpeg_builder_js_1.FfmpegBuilder())
+        const { width, height, path, name, format } = input;
+        const output = this.fileService.getFilePath(path, name, format || (0, path_1.extname)(path).slice(1)); // Keep the format or use the input file extension
+        const args = (new ffmpeg_builder_js_1.FfmpegBuilder(format))
             .input(path)
             .setVideoSize(width, height)
             .output(output);
+        // Log the generated FFmpeg command
+        console.log("Generated FFmpeg command:", args);
         return { command: 'ffmpeg', args, output };
     }
-    spawn({ output, command: commmand, args }) {
+    spawn({ output, command: command, args }) {
         this.fileService.deleteFileIfExists(output);
-        return (0, child_process_1.spawn)(commmand, args);
+        return (0, child_process_1.spawn)(command, args);
     }
     processStream(stream, logger) {
         const handler = new stream_handler_js_1.StreamHandler(logger);

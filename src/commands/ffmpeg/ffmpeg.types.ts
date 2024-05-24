@@ -5,8 +5,8 @@ export interface IFfmpegInput {
     height: number;
     path: string;
     name: string;
+    format?: string;
 }
-
 export interface ICommandExecFfmpeg extends ICommandExec {
     output: string;
 }
