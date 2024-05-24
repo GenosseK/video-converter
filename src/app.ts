@@ -3,7 +3,8 @@ import { ConsoleLogger } from "./out/console-logger/console.logger.js";
 
 export class App {
     async run() {
-        new FfmpegExecutor(ConsoleLogger.getInstance()).execute();
+        const executor = new FfmpegExecutor(ConsoleLogger.getInstance());
+        await executor.execute();
     }
 }
 

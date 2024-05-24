@@ -15,7 +15,8 @@ const console_logger_js_1 = require("./out/console-logger/console.logger.js");
 class App {
     run() {
         return __awaiter(this, void 0, void 0, function* () {
-            new ffmpeg_executor_js_1.FfmpegExecutor(console_logger_js_1.ConsoleLogger.getInstance()).execute();
+            const executor = new ffmpeg_executor_js_1.FfmpegExecutor(console_logger_js_1.ConsoleLogger.getInstance());
+            yield executor.execute();
         });
     }
 }

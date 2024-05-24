@@ -16,7 +16,19 @@ class CommandExecutor {
     }
     execute() {
         return __awaiter(this, void 0, void 0, function* () {
-            const input = yield this.prompt();
+            const inputs = yield this.promptMultiple();
+            if (Array.isArray(inputs)) {
+                for (const input of inputs) {
+                    yield this.executeCommand(input);
+                }
+            }
+            else {
+                yield this.executeCommand(inputs);
+            }
+        });
+    }
+    executeCommand(input) {
+        return __awaiter(this, void 0, void 0, function* () {
             const command = this.build(input);
             const stream = this.spawn(command);
             this.processStream(stream, this.logger);

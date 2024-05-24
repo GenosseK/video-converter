@@ -31,9 +31,29 @@ class FfmpegExecutor extends command_executor_js_1.CommandExecutor {
             return { width, height, path, name };
         });
     }
-    build({ width, height, path, name }) {
+    promptMultiple() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const fileCount = yield this.promptService.input('Number of files to convert', 'number');
+            if (fileCount === 1) {
+                return this.prompt();
+            }
+            else {
+                const inputs = [];
+                for (let i = 0; i < fileCount; i++) {
+                    const width = yield this.promptService.input(`Width for file ${i + 1}`, 'number');
+                    const height = yield this.promptService.input(`Height for file ${i + 1}`, 'number');
+                    const path = yield this.promptService.input(`Path to file ${i + 1}`, 'input');
+                    const name = yield this.promptService.input(`Output name for file ${i + 1}`, 'input');
+                    inputs.push({ width, height, path, name });
+                }
+                return inputs;
+            }
+        });
+    }
+    build(input) {
+        const { width, height, path, name } = input;
         const output = this.fileService.getFilePath(path, name, 'mp4');
-        const args = (new ffmpeg_builder_js_1.FfmpegBuilder)
+        const args = (new ffmpeg_builder_js_1.FfmpegBuilder())
             .input(path)
             .setVideoSize(width, height)
             .output(output);
