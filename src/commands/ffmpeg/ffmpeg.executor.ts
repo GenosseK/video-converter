@@ -1,6 +1,6 @@
-
+import { promises as fs } from "fs";
+import { isAbsolute, join, dirname, extname, basename } from "path";
 import { spawn, ChildProcessWithoutNullStreams } from "child_process";
-import { extname } from "path";
 import { CommandExecutor } from "../../core/executor/command.executor.js";
 import { FileService } from "../../core/files/files.service.js";
 import { StreamHandler } from "../../core/handlers/stream.handler.js";
@@ -28,25 +28,59 @@ export class FfmpegExecutor extends CommandExecutor<IFfmpegInput> {
 
     protected async promptMultiple(): Promise<IFfmpegInput | IFfmpegInput[]> {
         const fileCount = await this.promptService.input<number>('Number of files to convert', 'number');
-        if (fileCount === 1) {
-            return this.prompt();
-        } else {
-            const inputs: IFfmpegInput[] = [];
-            for (let i = 0; i < fileCount; i++) {
-                const width = await this.promptService.input<number>(`Width for file ${i + 1}`, 'number');
-                const height = await this.promptService.input<number>(`Height for file ${i + 1}`, 'number');
-                const path = await this.promptService.input<string>(`Path to file ${i + 1}`, 'input');
-                const name = await this.promptService.input<string>(`Output name for file ${i + 1}`, 'input');
-                const format = await this.promptService.input<'mp4' | 'mkv' | 'avi'>(`Video format (mp4/mkv/avi) for file ${i + 1}`, 'input');
-                inputs.push({ width, height, path, name, format });
-            }
-            return inputs;
+        const changeOutputPath = await this.promptService.input<string>('Do you want to change the output path? (yes/no)', 'input');
+        let outputPath: string | undefined;
+
+        if (changeOutputPath.toLowerCase() === 'yes') {
+            outputPath = await this.promptService.input<string>('Path to output directory', 'input');
         }
+
+        if (fileCount === 1) {
+            const singleInput = await this.prompt();
+            return { ...singleInput, outputPath };
+        } else {
+            const assignPaths = await this.promptService.input<string>('Do you want to assign paths to each video separately or specify a folder containing the videos? (separately/folder)', 'input');
+
+            if (assignPaths.toLowerCase() === 'folder') {
+                
+            } else {
+                const applyToAll = await this.promptService.input<string>('Do you want to apply the same settings to all files? (yes/no)', 'input');
+
+                if (applyToAll.toLowerCase() === 'yes') {
+                    const width = await this.promptService.input<number>('Width', 'number');
+                    const height = await this.promptService.input<number>('Height', 'number');
+                    const format = await this.promptService.input<'mp4' | 'mkv' | 'avi'>('Video format (mp4/mkv/avi)', 'input');
+
+                    const inputs: IFfmpegInput[] = [];
+                    for (let i = 0; i < fileCount; i++) {
+                        const path = await this.promptService.input<string>(`Path to file ${i + 1}`, 'input');
+                        const name = await this.promptService.input<string>(`Output name for file ${basename(path)} (leave blank to keep original name)`, 'input');
+                        const sanitizedOutputName = name.trim() || basename(path, extname(path));
+                        inputs.push({ width, height, path, name: sanitizedOutputName, format, outputPath });
+                    }
+                    return inputs;
+                } else {
+                    const inputs: IFfmpegInput[] = [];
+                    for (let i = 0; i < fileCount; i++) {
+                        const path = await this.promptService.input<string>(`Path to file ${i + 1}`, 'input');
+                        const width = await this.promptService.input<number>(`Width for file ${basename(path)}`, 'number');
+                        const height = await this.promptService.input<number>(`Height for file ${basename(path)}`, 'number');
+                        const name = await this.promptService.input<string>(`Output name for file ${basename(path)} (leave blank to keep original name)`, 'input');
+                        const format = await this.promptService.input<'mp4' | 'mkv' | 'avi'>(`Video format (mp4/mkv/avi) for file ${i + 1}`, 'input');
+                        inputs.push({ width, height, path, name: name.trim() || basename(path), format, outputPath });
+                    }
+                    return inputs;
+                }
+            }
+        }
+
+
+        return [];
     }
 
     protected build(input: IFfmpegInput): ICommandExecFfmpeg {
-        const { width, height, path, name, format } = input;
-        const output = this.fileService.getFilePath(path, name, format || extname(path).slice(1));
+        const { width, height, path, name, format, outputPath } = input;
+        const output = this.fileService.getFilePath(outputPath, name, format || extname(path).slice(1), path);
         const args = (new FfmpegBuilder(format))
             .input(path)
             .setVideoSize(width, height)

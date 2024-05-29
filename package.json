@@ -1,18 +1,28 @@
 {
 	"name": "video-converter",
 	"version": "1.0.0",
-	"description": "",
+	"description": "A video converter application using FFmpeg",
 	"main": "index.js",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+	"bin": {
+	  "video-converter": "./dist/app.js"
 	},
-	"author": "Alexey Kazhanov",
-	"license": "ISC",
+	"scripts": {
+	  "start": "node ./dist/app.js"
+	},
 	"dependencies": {
-		"inquirer": "^8.2.0"
+	  "inquirer": "^8.2.0"
 	},
 	"devDependencies": {
-		"@types/inquirer": "^8.2.0",
-		"@types/node": "^20.0.12"
-	}
-}
+	  "@types/inquirer": "^8.2.0",
+	  "@types/node": "^20.0.12"
+	},
+	"pkg": {
+	  "scripts": ["./commands/**/*.js", "./core/**/*.js", "./out/**/*.js", "./ffmpeg/**/*.js"],
+	  "assets": ["./assets/**/*"],
+	  "targets": ["node14-linux-x64", "node14-macos-x64", "node14-win-x64"],
+	  "outputPath": "./build"
+	},
+	"author": "Alexey Kazhanov",
+	"license": "ISC"
+  }
+  

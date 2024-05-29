@@ -24,16 +24,17 @@ class FileService {
             }
         });
     }
-    getFilePath(path, name, ext) {
+    getFilePath(outputPath, name, ext, inputPath) {
+        let path = outputPath || (0, path_1.dirname)(inputPath);
         if (!(0, path_1.isAbsolute)(path)) {
-            path = (0, path_1.join)(__dirname + '/' + path);
+            path = (0, path_1.join)(__dirname, path);
         }
-        return (0, path_1.join)((0, path_1.dirname)(path) + '/' + name + '.' + ext);
+        return (0, path_1.join)(path, `${name}.${ext}`);
     }
     deleteFileIfExists(path) {
         return __awaiter(this, void 0, void 0, function* () {
             if (yield this.isExist(path)) {
-                fs_1.promises.unlink(path);
+                yield fs_1.promises.unlink(path);
             }
         });
     }

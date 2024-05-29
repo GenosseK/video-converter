@@ -6,7 +6,9 @@ export interface IFfmpegInput {
     path: string;
     name: string;
     format?: string;
+    outputPath?: string;
 }
+
 export interface ICommandExecFfmpeg extends ICommandExec {
     output: string;
 }
