@@ -20,7 +20,3 @@ The Video Converter is a command-line application designed to convert videos to 
 ---
 
 Feel free to contribute and improve the Video Converter! If you encounter any issues, please [open an issue](https://github.com/GenosseK/video-converter/issues).
-
----
-
-![Thanks](https://via.placeholder.com/800x100.png?text=Happy+Converting!)
