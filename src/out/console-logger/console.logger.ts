@@ -16,6 +16,6 @@ export class ConsoleLogger implements IStreamLogger {
 		console.log(...args);
 	}
 	end(): void {
-		console.log('Ready!');
+		console.log('Ready! Press Enter to exit...');
 	}
 }

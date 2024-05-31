@@ -29,7 +29,7 @@ class App {
             input: process.stdin,
             output: process.stdout
         });
-        rl.question('Press Enter to exit...', () => {
+        rl.question('', () => {
             rl.close();
             process.exit(0);
         });

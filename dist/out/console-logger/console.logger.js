@@ -15,7 +15,7 @@ class ConsoleLogger {
         console.log(...args);
     }
     end() {
-        console.log('Ready!');
+        console.log('Ready! Press Enter to exit...');
     }
 }
 exports.ConsoleLogger = ConsoleLogger;
