@@ -17,8 +17,20 @@ export class FfmpegBuilder {
 		return this;
 	}
 
-	setVideoSize(width: number, height: number): this {
-		this.options.set('-s', `${width}x${height}`);
+	setVideoSize(width?: number, height?: number): this {
+		if ((width === undefined || isNaN(width)) && (height === undefined || isNaN(height))) {
+			return this;
+		}
+
+		let scaleOption = 'scale=';
+		if (width !== undefined && !isNaN(width)) {
+			scaleOption += `${width}:-2`;
+		} else if (height !== undefined && !isNaN(height)) {
+			scaleOption += `-2:${height}`;
+		}
+
+		this.options.set('-vf', scaleOption);
+
 		return this;
 	}
 

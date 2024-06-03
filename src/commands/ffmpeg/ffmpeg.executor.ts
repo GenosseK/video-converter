@@ -42,7 +42,7 @@ export class FfmpegExecutor extends CommandExecutor<IFfmpegInput> {
             const assignPaths = await this.promptService.input<string>('Do you want to assign paths to each video separately or specify a folder containing the videos? (separately/folder)', 'input');
 
             if (assignPaths.toLowerCase() === 'folder') {
-                
+
             } else {
                 const applyToAll = await this.promptService.input<string>('Do you want to apply the same settings to all files? (yes/no)', 'input');
 

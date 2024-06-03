@@ -15,7 +15,18 @@ class FfmpegBuilder {
         return this;
     }
     setVideoSize(width, height) {
-        this.options.set('-s', `${width}x${height}`);
+        if ((width === undefined || isNaN(width)) && (height === undefined || isNaN(height))) {
+            // Both width and height are undefined or NaN, do nothing
+            return this;
+        }
+        let scaleOption = 'scale=';
+        if (width !== undefined && !isNaN(width)) {
+            scaleOption += `${width}:-2`; // -2 means keep the aspect ratio
+        }
+        else if (height !== undefined && !isNaN(height)) {
+            scaleOption += `-2:${height}`; // -2 means keep the aspect ratio
+        }
+        this.options.set('-vf', scaleOption);
         return this;
     }
     setFormat(format) {

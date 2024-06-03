@@ -3,7 +3,7 @@ import { IStreamLogger } from "../handlers/stream.logger.inteface.js";
 import { ICommandExec } from "./command.types.js";
 
 export abstract class CommandExecutor<Input> {
-    constructor(protected logger: IStreamLogger) {}
+    constructor(protected logger: IStreamLogger) { }
 
     public async execute() {
         const inputs = await this.promptMultiple();
